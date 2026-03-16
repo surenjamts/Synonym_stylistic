@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Монгол бичвэр сайжруулагч</title>
+
+<style>
+:root{
+  --blue: #003A8C;
+  --blue-light: #0A4EB3;
+  --blue-soft: #E6F0FF;
+  --border: #D9E2F3;
+  --text: #1A1A1A;
+  --muted: #6B7280;
+  --bg: #F7F9FC;
+  --card: #FFFFFF;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:30px 20px 60px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  background: var(--blue);
+  border-radius:10px;
+}
+
+.title h1{
+  font-size:20px;
+  margin:0;
+  font-weight:700;
+  color: var(--blue);
+}
+
+.btn{
+  background: var(--blue);
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.btn:hover{
+  background: var(--blue-light);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:20px;
+}
+
+@media(max-width:980px){
+  .grid{grid-template-columns:1fr;}
+}
+
+.card{
+  background: var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.card-h{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  font-weight:600;
+  color: var(--blue);
+}
+
+.editor{
+  padding:16px;
+}
+
+textarea{
+  width:100%;
+  min-height:320px;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  resize:vertical;
+  font-size:14px;
+  line-height:1.6;
+}
+
+textarea:focus{
+  outline:none;
+  border-color: var(--blue);
+  box-shadow:0 0 0 3px rgba(0,58,140,.15);
+}
+
+.preview{
+  padding:16px;
+  line-height:1.6;
+  min-height:220px;
+  font-size:14px;
+}
+
+.hl{
+  background: var(--blue-soft);
+  padding:2px 4px;
+  border-radius:4px;
+}
+
+.focus {
+  background: #003A8C;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.side{
+  padding:16px;
+}
+
+.statgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.stat{
+  background: var(--blue-soft);
+  padding:12px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.stat b{
+  font-size:20px;
+  color: var(--blue);
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.item{
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:8px;
+}
+
+.word{
+  font-weight:700;
+  color: var(--blue);
+  margin-bottom:8px;
+}
+
+.badge{
+  background: var(--blue-soft);
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:12px;
+  margin-left:6px;
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.chip{
+  background: var(--blue-soft);
+  border:1px solid var(--border);
+  padding:6px 10px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:13px;
+  transition:.2s;
+}
+
+.chip:hover{
+  background: var(--blue);
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="title">
+      <div class="logo"></div>
+      <h1>Монгол бичвэр сайжруулагч</h1>
+    </div>
+    <button class="btn" onclick="improve()">Сайжруулах</button>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-h">Текст оруулах</div>
+      <div class="editor">
+        <textarea id="input" placeholder="Энд текст оруулна уу..."></textarea>
+      </div>
+
+      <div class="card-h">Сайжруулсан хувилбар</div>
+      <div class="preview" id="preview">
+        Үр дүн энд харагдана.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Дүн шинжилгээ</div>
+      <div class="side">
+
+        <div class="statgrid">
+          <div class="stat">
+            <b id="statReps">0</b>
+            <div>Давтагдсан үг</div>
+          </div>
+          <div class="stat">
+            <b id="statChanges">0</b>
+            <div>Санал болгосон үг</div>
+          </div>
+        </div>
+
+        <div class="list" id="repList">
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/**
+ * Full <script> for the white/blue index.html version.
+ * Features:
+ * - Calls POST /improve
+ * - Renders improved text as interactive spans (<span class="w" data-w="...">)
+ * - Hover a suggestion chip => highlights occurrences of that suggested word in the improved preview
+ * - Click a chip => copies the word
+ */
+
+function normalizeToken(s){
+  return (s || "")
+    .toLowerCase()
+    .replace(/^[\s"'“‘(\[{]+|[\s"'”’)\]}.,;:!?]+$/g, "");
+}
+
+function escapeHtml(s){
+  return (s || "").replace(/[&<>"']/g, (c)=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function renderPreviewInteractive(text){
+  const parts = String(text).split(/(\s+)/); // keep whitespace
+  const html = parts.map(p=>{
+    if (!p || /^\s+$/.test(p)) return p;
+
+    // lead/core/trail to preserve punctuation
+    const m = p.match(/^([\s"'“‘(\[{]*)(.*?)([\s"'”’)\]}.,;:!?]*)$/);
+    const lead = m?.[1] ?? "";
+    const core = m?.[2] ?? p;
+    const trail = m?.[3] ?? "";
+
+    const key = normalizeToken(core);
+    if (!key) return escapeHtml(p);
+
+    return `${escapeHtml(lead)}<span class="w" data-w="${escapeHtml(key)}">${escapeHtml(core)}</span>${escapeHtml(trail)}`;
+  }).join("");
+
+  document.getElementById("preview").innerHTML = html;
+}
+
+function clearFocus(){
+  document.querySelectorAll("#preview .w.focus").forEach(el => el.classList.remove("focus"));
+}
+
+function focusWord(word){
+  const key = normalizeToken(word);
+  if(!key) return;
+  // CSS.escape is supported in modern browsers; fallback if not
+  const safe = (window.CSS && CSS.escape) ? CSS.escape(key) : key.replace(/"/g, '\\"');
+  document.querySelectorAll(`#preview .w[data-w="${safe}"]`).forEach(el => el.classList.add("focus"));
+}
+
+async function copyToClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+}
+
+async function improve(){
+  const inputEl = document.getElementById("input");
+  const text = inputEl.value || "";
+
+  if(!text.trim()){
+    alert("Эхлээд текст оруулна уу.");
+    return;
+  }
+
+  const res = await fetch("/improve", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ text })
+  });
+
+  if(!res.ok){
+    alert("Серверийн алдаа: " + res.status);
+    return;
+  }
+
+  const data = await res.json();
+
+  // 1) Improved preview (interactive spans)
+  renderPreviewInteractive(data.improved || "");
+
+  // 2) Stats
+  const reps = Array.isArray(data.repetitions) ? data.repetitions : [];
+  document.getElementById("statReps").innerText = String(reps.length);
+  const totalSuggestions = reps.reduce((a, r) => a + (Array.isArray(r.replacements) ? r.replacements.length : 0), 0);
+  document.getElementById("statChanges").innerText = String(totalSuggestions);
+
+  // 3) Build right-side list
+  const list = document.getElementById("repList");
+  list.innerHTML = "";
+
+  reps.forEach(r => {
+    const word = r.word || "";
+    const count = Number(r.count ?? 0);
+    const replacements = Array.isArray(r.replacements) ? r.replacements : [];
+
+    const div = document.createElement("div");
+    div.className = "item";
+
+    const chipsHtml = replacements
+      .map(s => `<span class="chip" data-focus="${escapeHtml(s)}">${escapeHtml(s)}</span>`)
+      .join("");
+
+    div.innerHTML = `
+      <div class="word">
+        ${escapeHtml(word)}
+        <span class="badge">x${escapeHtml(String(count))}</span>
+      </div>
+      <div class="chips">
+        ${chipsHtml || `<span style="color:#6B7280;font-size:13px;">Ижил утгатай үг алга.</span>`}
+      </div>
+    `;
+
+    list.appendChild(div);
+
+    // Hover highlight + click copy
+    div.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("mouseenter", () => {
+        clearFocus();
+        focusWord(chip.getAttribute("data-focus") || "");
+      });
+      chip.addEventListener("mouseleave", () => {
+        clearFocus();
+      });
+      chip.addEventListener("click", async () => {
+        const w = chip.getAttribute("data-focus") || "";
+        await copyToClipboard(w);
+      });
+    });
+  });
+}
+
+// Ctrl+Enter shortcut
+document.addEventListener("keydown", (e)=>{
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter"){
+    e.preventDefault();
+    improve();
+  }
+});
+</script>
+
+</body>
+</html>

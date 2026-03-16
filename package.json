@@ -1,0 +1,14 @@
+{
+  "name": "mn-writing-improver",
+  "type": "module",
+  "scripts": {
+    "dev": "node --loader ts-node/esm server.ts"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
