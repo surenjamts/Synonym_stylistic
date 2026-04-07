@@ -96,10 +96,10 @@ string chooseVariant4(const vector<string>& forms, const string& stem) {
 
     string v = findLastVowel(stem);
 
-    if (v == u8"а") return forms[0];
-    if (v == u8"э") return forms[1];
-    if (v == u8"о" || v == u8"у") return forms[2];
-    if (v == u8"ө" || v == u8"ү") return forms[3];
+    if (v == u8"а" || v == u8"у") return forms[0];
+    if (v == u8"э" || v == u8"ү") return forms[1];
+    if (v == u8"о" ) return forms[2];
+    if (v == u8"ө" ) return forms[3];
 
     return forms[0];
 }
